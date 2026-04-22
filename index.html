@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Data Extractor — PDF & Image to CSV/JSON | Free Tool</title>
+<meta name="description" content="Free AI-powered tool to extract structured data from PDFs and images. Convert invoices, receipts, tables, and scanned documents to CSV or JSON instantly. No signup required.">
+<meta name="keywords" content="PDF to CSV, image to CSV, data extraction, AI extractor, invoice parser, receipt scanner, table extraction, free tool">
+<meta property="og:title" content="AI Data Extractor — PDF & Image to CSV/JSON">
+<meta property="og:description" content="Extract structured data from PDFs and images instantly. No signup, no upload limits, bring your own API key.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "AI Data Extractor",
+  "description": "Free AI-powered tool to extract structured data from PDFs and images into CSV or JSON format.",
+  "applicationCategory": "ProductivityApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "url": "https://oliverwqcwrw.github.io/ai-data-extractor/"
+}
+</script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3347;
+    --accent: #6c63ff;
+    --accent2: #00d4aa;
+    --text: #e8eaf6;
+    --muted: #8b90a7;
+    --danger: #ff6b6b;
+    --success: #00d4aa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+  header .logo { font-size: 24px; }
+  header h1 { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  header .badge { background: var(--accent2); color: #000; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-left: 8px; -webkit-text-fill-color: #000; }
+
+  main { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+
+  .hero { text-align: center; margin-bottom: 40px; }
+  .hero h2 { font-size: 36px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; }
+  .hero h2 span { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { color: var(--muted); font-size: 16px; max-width: 560px; margin: 0 auto; }
+
+  .features { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+  .feature-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 13px; color: var(--muted); }
+  .feature-chip span { margin-right: 6px; }
+
+  section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+  section h3 { font-size: 14px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; }
+
+  /* API Config */
+  .provider-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .provider-btn { background: var(--surface2); border: 2px solid var(--border); border-radius: 10px; padding: 12px 16px; cursor: pointer; text-align: left; color: var(--text); font-size: 13px; transition: all 0.2s; }
+  .provider-btn:hover { border-color: var(--accent); }
+  .provider-btn.active { border-color: var(--accent); background: rgba(108,99,255,0.12); }
+  .provider-btn .name { font-weight: 600; display: block; margin-bottom: 2px; }
+  .provider-btn .model { color: var(--muted); font-size: 11px; }
+  .provider-btn .tag { background: var(--accent2); color: #000; font-size: 10px; padding: 1px 6px; border-radius: 10px; font-weight: 700; }
+
+  .input-row { display: flex; gap: 10px; align-items: flex-end; }
+  .input-group { flex: 1; }
+  label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  input[type=text], input[type=password], select, textarea {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 14px; color: var(--text); font-size: 14px; outline: none; transition: border-color 0.2s;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  .save-btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 18px; cursor: pointer; font-size: 14px; font-weight: 600; white-space: nowrap; transition: opacity 0.2s; }
+  .save-btn:hover { opacity: 0.85; }
+
+  /* Upload Zone */
+  .drop-zone {
+    border: 2px dashed var(--border); border-radius: 12px; padding: 48px 24px; text-align: center;
+    cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent); background: rgba(108,99,255,0.05); }
+  .drop-zone .icon { font-size: 48px; margin-bottom: 12px; }
+  .drop-zone h4 { font-size: 18px; margin-bottom: 6px; }
+  .drop-zone p { color: var(--muted); font-size: 14px; }
+  .drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .file-types { display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+  .file-type { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-size: 12px; color: var(--muted); }
+
+  .file-preview { background: var(--surface2); border-radius: 10px; padding: 12px 16px; margin-top: 14px; display: none; align-items: center; gap: 12px; }
+  .file-preview .file-icon { font-size: 28px; }
+  .file-preview .file-info { flex: 1; }
+  .file-preview .file-name { font-weight: 600; font-size: 14px; }
+  .file-preview .file-size { color: var(--muted); font-size: 12px; }
+  .file-preview .remove-btn { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px; }
+
+  /* Options */
+  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width: 540px) { .options-grid { grid-template-columns: 1fr; } }
+  textarea { resize: vertical; min-height: 80px; font-family: inherit; }
+
+  /* Extract Button */
+  .extract-btn {
+    width: 100%; background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    color: #fff; border: none; border-radius: 12px; padding: 16px; font-size: 17px;
+    font-weight: 700; cursor: pointer; transition: all 0.2s; letter-spacing: 0.02em;
+  }
+  .extract-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .extract-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* Progress */
+  .progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin: 12px 0; overflow: hidden; display: none; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); width: 0%; transition: width 0.3s; animation: shimmer 1.5s infinite; }
+  @keyframes shimmer { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+  .status-msg { font-size: 13px; text-align: center; padding: 8px; border-radius: 8px; display: none; margin-top: 10px; }
+  .status-msg.error { background: rgba(255,107,107,0.12); color: var(--danger); }
+  .status-msg.info { background: rgba(108,99,255,0.1); color: var(--accent); }
+
+  /* Results */
+  #results-section { display: none; }
+  .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: gap; gap: 10px; }
+  .results-header h3 { margin: 0; color: var(--text); font-size: 16px; }
+  .export-btns { display: flex; gap: 8px; }
+  .export-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; }
+  .export-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+  .export-btn.primary { background: var(--accent2); color: #000; border-color: var(--accent2); }
+  .export-btn.primary:hover { opacity: 0.85; color: #000; }
+
+  .tab-bar { display: flex; gap: 4px; margin-bottom: 16px; background: var(--surface2); padding: 4px; border-radius: 10px; width: fit-content; }
+  .tab-btn { background: none; border: none; color: var(--muted); padding: 6px 16px; border-radius: 7px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; }
+  .tab-btn.active { background: var(--accent); color: #fff; }
+
+  .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { background: var(--surface2); padding: 10px 14px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+  td input { background: none; border: none; color: var(--text); width: 100%; outline: none; font-size: 13px; }
+  td input:focus { background: rgba(108,99,255,0.1); border-radius: 4px; padding: 2px 4px; }
+
+  pre { background: var(--surface2); border-radius: 10px; padding: 16px; overflow-x: auto; font-size: 12px; color: #a8d8a8; line-height: 1.6; white-space: pre-wrap; word-break: break-all; }
+
+  .stats-bar { display: flex; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
+  .stat { background: var(--surface2); border-radius: 8px; padding: 10px 16px; font-size: 13px; }
+  .stat .val { font-size: 22px; font-weight: 700; color: var(--accent2); display: block; }
+
+  /* Tip */
+  .tip-box { background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.2); border-radius: 10px; padding: 14px 16px; font-size: 13px; color: var(--muted); margin-top: 16px; }
+  .tip-box strong { color: var(--text); }
+
+  /* Donate */
+  .donate-section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px 24px; text-align: center; margin-top: 40px; }
+  .donate-section h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .donate-section p { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+  .wallet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 600px; margin: 0 auto; }
+  @media(max-width: 540px) { .wallet-grid { grid-template-columns: 1fr; } }
+  .wallet-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .wallet-card .chain { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 8px; }
+  .wallet-card .currency { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+  .wallet-card img { width: 110px; height: 110px; border-radius: 8px; margin-bottom: 12px; display: block; margin-left: auto; margin-right: auto; }
+  .wallet-card .address { font-family: monospace; font-size: 10px; color: var(--muted); word-break: break-all; background: var(--bg); padding: 8px; border-radius: 6px; cursor: pointer; transition: color 0.2s; }
+  .wallet-card .address:hover { color: var(--accent2); }
+  .copy-hint { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+  footer { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--border); margin-top: 40px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo">🔍</span>
+  <h1>AI Data Extractor <span class="badge">FREE</span></h1>
+</header>
+
+<main>
+  <div class="hero">
+    <h2>Extract <span>Structured Data</span><br>from PDFs & Images</h2>
+    <p>Upload invoices, receipts, tables, or any document — AI extracts the data and exports it as CSV or JSON instantly.</p>
+    <div class="features">
+      <div class="feature-chip"><span>📄</span> PDF Support</div>
+      <div class="feature-chip"><span>🖼️</span> Image OCR</div>
+      <div class="feature-chip"><span>📊</span> CSV Export</div>
+      <div class="feature-chip"><span>🔧</span> JSON Export</div>
+      <div class="feature-chip"><span>🔒</span> Private — runs in browser</div>
+      <div class="feature-chip"><span>✏️</span> Editable results</div>
+    </div>
+  </div>
+
+  <!-- API Config -->
+  <section>
+    <h3>⚙️ AI Provider</h3>
+    <div class="provider-grid">
+      <button class="provider-btn active" data-provider="openai" onclick="selectProvider('openai', this)">
+        <span class="name">OpenAI</span>
+        <span class="model">gpt-4o — Vision ✓</span>
+      </button>
+      <button class="provider-btn" data-provider="openrouter" onclick="selectProvider('openrouter', this)">
+        <span class="name">OpenRouter</span>
+        <span class="model">free llama vision</span>
+        <span class="tag">FREE</span>
+      </button>
+      <button class="provider-btn" data-provider="deepseek" onclick="selectProvider('deepseek', this)">
+        <span class="name">DeepSeek</span>
+        <span class="model">deepseek-chat</span>
+      </button>
+      <button class="provider-btn" data-provider="groq" onclick="selectProvider('groq', this)">
+        <span class="name">Groq</span>
+        <span class="model">llama-3.3-70b — text only</span>
+        <span class="tag">FREE</span>
+      </button>
+    </div>
+    <div class="input-row">
+      <div class="input-group">
+        <label id="key-label">API Key (stored locally, never sent to our servers)</label>
+        <input type="password" id="api-key" placeholder="sk-..." autocomplete="off">
+      </div>
+      <button class="save-btn" onclick="saveKey()">Save Key</button>
+    </div>
+    <div id="key-status" style="font-size:12px;margin-top:8px;color:var(--muted);"></div>
+  </section>
+
+  <!-- Upload -->
+  <section>
+    <h3>📎 Upload File</h3>
+    <div class="drop-zone" id="drop-zone">
+      <input type="file" id="file-input" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.bmp,.tiff">
+      <div class="icon">📂</div>
+      <h4>Drop your file here</h4>
+      <p>or click to browse</p>
+      <div class="file-types">
+        <span class="file-type">PDF</span>
+        <span class="file-type">PNG</span>
+        <span class="file-type">JPG</span>
+        <span class="file-type">WEBP</span>
+        <span class="file-type">TIFF</span>
+      </div>
+    </div>
+    <div class="file-preview" id="file-preview">
+      <span class="file-icon" id="preview-icon">📄</span>
+      <div class="file-info">
+        <div class="file-name" id="preview-name"></div>
+        <div class="file-size" id="preview-size"></div>
+      </div>
+      <button class="remove-btn" onclick="clearFile()" title="Remove">✕</button>
+    </div>
+
+    <div class="tip-box" style="margin-top:14px;">
+      <strong>💡 Tip:</strong> For best results with PDFs, use a vision-capable model (OpenAI gpt-4o or OpenRouter). 
+      The tool renders the PDF as an image and sends it to the AI for extraction.
+    </div>
+  </section>
+
+  <!-- Options -->
+  <section>
+    <h3>🎯 Extraction Options</h3>
+    <div class="options-grid">
+      <div class="input-group">
+        <label>Document Type</label>
+        <select id="doc-type" onchange="updatePromptHint()">
+          <option value="auto">Auto-detect</option>
+          <option value="invoice">Invoice / Bill</option>
+          <option value="receipt">Receipt</option>
+          <option value="table">Table / Spreadsheet</option>
+          <option value="form">Form / Survey</option>
+          <option value="business-card">Business Cards</option>
+          <option value="product-list">Product List / Catalog</option>
+          <option value="custom">Custom (describe below)</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Output Format</label>
+        <select id="output-format">
+          <option value="csv">CSV (Excel-compatible)</option>
+          <option value="json">JSON</option>
+          <option value="both">Both CSV & JSON</option>
+        </select>
+      </div>
+    </div>
+    <div class="input-group" style="margin-top:14px;">
+      <label>Custom Instructions (optional)</label>
+      <textarea id="custom-prompt" placeholder="e.g. Extract only the line items with quantity and unit price. Group by category." rows="3"></textarea>
+    </div>
+  </section>
+
+  <!-- Action -->
+  <section style="border-color: var(--accent); background: rgba(108,99,255,0.04);">
+    <button class="extract-btn" id="extract-btn" onclick="extractData()">
+      ✨ Extract Data with AI
+    </button>
+    <div class="progress-bar" id="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="status-msg" id="status-msg"></div>
+  </section>
+
+  <!-- Results -->
+  <section id="results-section">
+    <div class="results-header">
+      <h3>✅ Extracted Data</h3>
+      <div class="export-btns">
+        <button class="export-btn primary" onclick="downloadCSV()">⬇ Download CSV</button>
+        <button class="export-btn" onclick="downloadJSON()">⬇ Download JSON</button>
+        <button class="export-btn" onclick="copyToClipboard()">📋 Copy</button>
+      </div>
+    </div>
+
+    <div class="stats-bar" id="stats-bar"></div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('table', this)">Table View</button>
+      <button class="tab-btn" onclick="switchTab('json', this)">JSON View</button>
+      <button class="tab-btn" onclick="switchTab('raw', this)">Raw CSV</button>
+    </div>
+
+    <div id="tab-table">
+      <div class="table-container" id="table-container"></div>
+      <div class="tip-box" style="margin-top:12px;">
+        <strong>✏️ Editable:</strong> Click any cell to edit values before downloading.
+      </div>
+    </div>
+    <div id="tab-json" style="display:none;"><pre id="json-view"></pre></div>
+    <div id="tab-raw" style="display:none;"><pre id="raw-view"></pre></div>
+  </section>
+
+  <!-- Donate -->
+  <div class="donate-section">
+    <h3>☕ Support This Tool</h3>
+    <p>This tool is free forever. If it saved you time, consider buying me a coffee!<br>Your support helps keep this and future tools free.</p>
+    <div class="wallet-grid">
+      <div class="wallet-card">
+        <div class="chain">USDT · TRC-20 (TRON)</div>
+        <div class="currency">💵 USDT</div>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=TSvC67jexputnNHayVR8fpScwFmwvZV8jp" alt="USDT QR">
+        <div class="address" onclick="copyAddr('TSvC67jexputnNHayVR8fpScwFmwvZV8jp', this)">TSvC67jexputnNHayVR8fpScwFmwvZV8jp</div>
+        <div class="copy-hint">Click address to copy</div>
+      </div>
+      <div class="wallet-card">
+        <div class="chain">ETH · ERC-20 (Ethereum)</div>
+        <div class="currency">💎 ETH</div>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=0x11e764fac3fcd4be16da43a252a62b156e06a632" alt="ETH QR">
+        <div class="address" onclick="copyAddr('0x11e764fac3fcd4be16da43a252a62b156e06a632', this)">0x11e764fac3fcd4be16da43a252a62b156e06a632</div>
+        <div class="copy-hint">Click address to copy</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  AI Data Extractor — Free forever · Your files never leave your browser · No signup required
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+// ===== STATE =====
+let currentProvider = 'openai';
+let currentFile = null;
+let extractedData = { headers: [], rows: [] };
+let rawCSV = '';
+let rawJSON = '';
+
+const PROVIDERS = {
+  openai:     { url: 'https://api.openai.com/v1/chat/completions',         model: 'gpt-4o',                                     vision: true  },
+  openrouter: { url: 'https://openrouter.ai/api/v1/chat/completions',      model: 'meta-llama/llama-3.2-11b-vision-instruct:free', vision: true  },
+  deepseek:   { url: 'https://api.deepseek.com/v1/chat/completions',       model: 'deepseek-chat',                               vision: false },
+  groq:       { url: 'https://api.groq.com/openai/v1/chat/completions',    model: 'llama-3.3-70b-versatile',                     vision: false }
+};
+
+// ===== INIT =====
+window.pdfjsLib && (pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js');
+
+// Load saved key on startup
+window.addEventListener('DOMContentLoaded', () => {
+  loadKey(currentProvider);
+  setupDragDrop();
+});
+
+function selectProvider(p, btn) {
+  currentProvider = p;
+  document.querySelectorAll('.provider-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadKey(p);
+}
+
+function loadKey(p) {
+  const k = localStorage.getItem('api_key_' + p) || '';
+  document.getElementById('api-key').value = k;
+  document.getElementById('key-status').textContent = k ? '✓ Key loaded from local storage' : '';
+}
+
+function saveKey() {
+  const k = document.getElementById('api-key').value.trim();
+  if (!k) return;
+  localStorage.setItem('api_key_' + currentProvider, k);
+  document.getElementById('key-status').textContent = '✓ Saved!';
+  setTimeout(() => document.getElementById('key-status').textContent = '✓ Key loaded from local storage', 1500);
+}
+
+// ===== FILE HANDLING =====
+function setupDragDrop() {
+  const zone = document.getElementById('drop-zone');
+  const input = document.getElementById('file-input');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); handleFile(e.dataTransfer.files[0]); });
+  input.addEventListener('change', e => handleFile(e.target.files[0]));
+}
+
+function handleFile(file) {
+  if (!file) return;
+  currentFile = file;
+  const preview = document.getElementById('file-preview');
+  document.getElementById('preview-name').textContent = file.name;
+  document.getElementById('preview-size').textContent = formatSize(file.size);
+  document.getElementById('preview-icon').textContent = file.type === 'application/pdf' ? '📄' : '🖼️';
+  preview.style.display = 'flex';
+}
+
+function clearFile() {
+  currentFile = null;
+  document.getElementById('file-preview').style.display = 'none';
+  document.getElementById('file-input').value = '';
+}
+
+function formatSize(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+
+// ===== PDF → IMAGE =====
+async function pdfToBase64Image(file) {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const page = await pdf.getPage(1);
+  const viewport = page.getViewport({ scale: 2.0 });
+  const canvas = document.createElement('canvas');
+  canvas.width = viewport.width;
+  canvas.height = viewport.height;
+  await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+  return canvas.toDataURL('image/jpeg', 0.9).split(',')[1];
+}
+
+async function imageToBase64(file) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result.split(',')[1]);
+    reader.readAsDataURL(file);
+  });
+}
+
+// ===== PROMPT BUILDER =====
+function buildPrompt() {
+  const docType = document.getElementById('doc-type').value;
+  const custom = document.getElementById('custom-prompt').value.trim();
+  const hints = {
+    auto: 'Detect what type of document this is and extract all structured data.',
+    invoice: 'Extract all invoice fields: invoice number, date, vendor, buyer, line items (description, qty, unit price, total), subtotal, tax, grand total.',
+    receipt: 'Extract: merchant name, date, time, items purchased (name, price, quantity), subtotal, tax, tip, total, payment method.',
+    table: 'Extract the complete table data preserving all rows and columns exactly.',
+    form: 'Extract all form fields as key-value pairs: field name and filled value.',
+    'business-card': 'Extract: name, title, company, email, phone, address, website, social media handles.',
+    'product-list': 'Extract all products with: name, SKU/code, description, price, unit, availability.',
+    custom: ''
+  };
+  let prompt = `You are a data extraction AI. ${hints[docType] || hints.auto}\n\n`;
+  if (custom) prompt += `Additional instructions: ${custom}\n\n`;
+  prompt += `IMPORTANT: Return ONLY valid CSV format with:
+1. First row = column headers
+2. Subsequent rows = data
+3. Use commas as separators
+4. Wrap values containing commas or newlines in double quotes
+5. No extra text, no markdown fences, no explanation — just the raw CSV data`;
+  return prompt;
+}
+
+// ===== EXTRACT =====
+async function extractData() {
+  const key = document.getElementById('api-key').value.trim() || localStorage.getItem('api_key_' + currentProvider) || '';
+  if (!key) { showStatus('Please enter your API key first.', 'error'); return; }
+  if (!currentFile) { showStatus('Please upload a file first.', 'error'); return; }
+
+  const btn = document.getElementById('extract-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Extracting...';
+  showProgress(true);
+  setProgress(10);
+  document.getElementById('results-section').style.display = 'none';
+
+  try {
+    const provider = PROVIDERS[currentProvider];
+    let base64Img = null;
+    let isPDF = currentFile.type === 'application/pdf';
+
+    setProgress(20);
+    showStatus('Processing file...', 'info');
+
+    if (isPDF) {
+      if (!provider.vision) {
+        showStatus('⚠️ This provider does not support vision. For PDF files, please use OpenAI or OpenRouter.', 'error');
+        return;
+      }
+      base64Img = await pdfToBase64Image(currentFile);
+    } else {
+      if (!provider.vision) {
+        // fallback: just send filename info
+        base64Img = null;
+      } else {
+        base64Img = await imageToBase64(currentFile);
+      }
+    }
+
+    setProgress(40);
+    showStatus('Sending to AI...', 'info');
+
+    const prompt = buildPrompt();
+    let messages;
+
+    if (base64Img && provider.vision) {
+      messages = [{ role: 'user', content: [
+        { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Img}` } },
+        { type: 'text', text: prompt }
+      ]}];
+    } else {
+      // Text-only fallback (user must paste content)
+      showStatus('⚠️ This provider does not support image/PDF input. Please use OpenAI or OpenRouter for visual documents.', 'error');
+      return;
+    }
+
+    const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` };
+    if (currentProvider === 'openrouter') {
+      headers['HTTP-Referer'] = 'https://oliverwqcwrw.github.io/ai-data-extractor/';
+      headers['X-Title'] = 'AI Data Extractor';
+    }
+
+    const resp = await fetch(provider.url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ model: provider.model, messages, max_tokens: 4096, temperature: 0 })
+    });
+
+    setProgress(80);
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err?.error?.message || `API error ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    const csv = (data.choices?.[0]?.message?.content || '').trim().replace(/^```[a-z]*\n?/i, '').replace(/```$/i, '').trim();
+
+    setProgress(100);
+    showStatus('', 'info');
+
+    if (!csv) throw new Error('AI returned empty response.');
+    renderResults(csv);
+
+  } catch (e) {
+    showStatus('❌ Error: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✨ Extract Data with AI';
+    showProgress(false);
+  }
+}
+
+// ===== RENDER =====
+function renderResults(csv) {
+  rawCSV = csv;
+  const rows = parseCSV(csv);
+  if (!rows.length) { showStatus('No data could be extracted from this file.', 'error'); return; }
+
+  const headers = rows[0];
+  const dataRows = rows.slice(1);
+  extractedData = { headers, rows: dataRows };
+  rawJSON = JSON.stringify(dataRows.map(r => {
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = r[i] || '');
+    return obj;
+  }), null, 2);
+
+  // Stats
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat"><span class="val">${headers.length}</span>Columns</div>
+    <div class="stat"><span class="val">${dataRows.length}</span>Rows</div>
+  `;
+
+  // Table
+  let tableHTML = '<table><thead><tr>' + headers.map(h => `<th>${escHtml(h)}</th>`).join('') + '</tr></thead><tbody>';
+  dataRows.forEach((row, ri) => {
+    tableHTML += '<tr>' + headers.map((_, ci) => `<td><input value="${escAttr(row[ci] || '')}" onchange="updateCell(${ri},${ci},this.value)"></td>`).join('') + '</tr>';
+  });
+  tableHTML += '</tbody></table>';
+  document.getElementById('table-container').innerHTML = tableHTML;
+  document.getElementById('json-view').textContent = rawJSON;
+  document.getElementById('raw-view').textContent = rawCSV;
+
+  document.getElementById('results-section').style.display = 'block';
+  document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateCell(ri, ci, val) {
+  extractedData.rows[ri][ci] = val;
+  rebuildExports();
+}
+
+function rebuildExports() {
+  rawCSV = [extractedData.headers, ...extractedData.rows].map(r => r.map(c => /[,"\n]/.test(c) ? `"${c.replace(/"/g,'""')}"` : c).join(',')).join('\n');
+  rawJSON = JSON.stringify(extractedData.rows.map(r => {
+    const obj = {};
+    extractedData.headers.forEach((h,i) => obj[h] = r[i] || '');
+    return obj;
+  }), null, 2);
+  document.getElementById('json-view').textContent = rawJSON;
+  document.getElementById('raw-view').textContent = rawCSV;
+}
+
+// ===== CSV PARSER =====
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = '', inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQ) {
+      if (c === '"' && text[i+1] === '"') { field += '"'; i++; }
+      else if (c === '"') inQ = false;
+      else field += c;
+    } else {
+      if (c === '"') inQ = true;
+      else if (c === ',') { row.push(field.trim()); field = ''; }
+      else if (c === '\n' || c === '\r') {
+        if (c === '\r' && text[i+1] === '\n') i++;
+        row.push(field.trim()); field = '';
+        if (row.some(f => f)) rows.push(row);
+        row = [];
+      } else field += c;
+    }
+  }
+  if (field || row.length) { row.push(field.trim()); if (row.some(f => f)) rows.push(row); }
+  return rows;
+}
+
+// ===== EXPORTS =====
+function downloadCSV() {
+  download(rawCSV, 'extracted-data.csv', 'text/csv');
+}
+function downloadJSON() {
+  download(rawJSON, 'extracted-data.json', 'application/json');
+}
+function copyToClipboard() {
+  navigator.clipboard.writeText(rawCSV).then(() => alert('CSV copied to clipboard!'));
+}
+function download(content, filename, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type }));
+  a.download = filename;
+  a.click();
+}
+
+// ===== UI HELPERS =====
+function switchTab(tab, btn) {
+  ['table','json','raw'].forEach(t => { document.getElementById('tab-'+t).style.display = t === tab ? '' : 'none'; });
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function showStatus(msg, type) {
+  const el = document.getElementById('status-msg');
+  el.textContent = msg; el.className = 'status-msg ' + type; el.style.display = msg ? 'block' : 'none';
+}
+function showProgress(show) {
+  document.getElementById('progress-bar').style.display = show ? 'block' : 'none';
+}
+function setProgress(pct) {
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(s) { return String(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function copyAddr(addr, el) {
+  navigator.clipboard.writeText(addr).then(() => { el.style.color = 'var(--accent2)'; setTimeout(() => el.style.color = '', 1500); });
+}
+function updatePromptHint() {}
+</script>
+</body>
+</html>
